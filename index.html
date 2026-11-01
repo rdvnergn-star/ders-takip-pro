@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gelişmiş Özel Ders Takip Sistemi</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #eff6ff;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #cbd5e1;
+            --success: #16a34a;
+            --success-bg: #dcfce7;
+            --danger: #dc2626;
+            --danger-bg: #fee2e2;
+            --warning: #d97706;
+            --warning-bg: #fef3c7;
+            --neutral-bg: #f1f5f9;
+            --radius-lg: 12px;
+            --radius-md: 8px;
+            --radius-sm: 6px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 30px;
+        }
+
+        /* HEADER */
+        header {
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+
+        .header-top {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+        }
+
+        .brand-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.2;
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .save-badge {
+            background: var(--success-bg);
+            color: var(--success);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid #86efac;
+            transition: opacity 0.3s ease;
+        }
+
+        .controls-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--neutral-bg);
+            padding: 4px 8px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+        }
+
+        .controls select {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 13px;
+            outline: none;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 8px 14px;
+            border-radius: var(--radius-md);
+            border: 1px solid transparent;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--neutral-bg);
+            color: var(--text);
+            border-color: var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-outline-danger {
+            background: white;
+            color: var(--danger);
+            border-color: #fca5a5;
+        }
+
+        .btn-outline-danger:hover {
+            background: var(--danger-bg);
+        }
+
+        /* TABS */
+        nav {
+            border-top: 1px solid var(--border);
+            background: var(--card-bg);
+        }
+
+        .tabs {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            overflow-x: auto;
+            padding: 0 16px;
+            scrollbar-width: none;
+        }
+
+        .tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab-btn {
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-muted);
+            cursor: pointer;
+            white-space: nowrap;
+            transition: color 0.15s, border-color 0.15s;
+        }
+
+        .tab-btn:hover {
+            color: var(--text);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        /* MAIN LAYOUT */
+        main {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 16px;
+            flex: 1;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .info-banner {
+            background: var(--primary-light);
+            border: 1px solid #bfdbfe;
+            border-radius: var(--radius-md);
+            padding: 10px 14px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 13px;
+            color: #1e40af;
+        }
+
+        /* GRID & COLUMNS */
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+            gap: 16px;
+        }
+
+        .day-column {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+            min-height: 360px;
+        }
+
+        .day-header {
+            background: var(--neutral-bg);
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .day-title {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text);
+        }
+
+        .day-date {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+            background: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .day-body {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        /* LESSON CARDS */
+        .lesson-card {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+            position: relative;
+        }
+
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .student-name {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text);
+        }
+
+        .lesson-time {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: var(--radius-sm);
+            white-space: nowrap;
+        }
+
+        .lesson-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 4px;
+            padding-top: 8px;
+            border-top: 1px dashed var(--border);
+        }
+
+        .lesson-price {
+            font-weight: 800;
+            color: var(--success);
+            font-size: 14px;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 4px;
+        }
+
+        .btn-icon {
+            width: 26px;
+            height: 26px;
+            padding: 0;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--text);
+        }
+
+        .btn-icon:hover {
+            background: var(--neutral-bg);
+        }
+
+        .btn-icon.delete:hover {
+            background: var(--danger-bg);
+            color: var(--danger);
+            border-color: #fca5a5;
+        }
+
+        /* STATUS BUTTONS */
+        .status-btn {
+            padding: 10px;
+            border-radius: var(--radius-md);
+            font-size: 12px;
+            font-weight: 700;
+            width: 100%;
+            text-align: center;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .status-neutral {
+            background: var(--neutral-bg);
+            color: var(--text-muted);
+            border-color: var(--border);
+        }
+
+        .status-paid {
+            background: var(--success-bg);
+            color: var(--success);
+            border-color: #86efac;
+        }
+
+        .status-unpaid {
+            background: var(--danger-bg);
+            color: var(--danger);
+            border-color: #fca5a5;
+        }
+
+        /* AYLIK ALACAKLAR */
+        .receivable-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .receivable-info h3 {
+            font-size: 15px;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .receivable-breakdown {
+            margin-top: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 12px;
+        }
+
+        .badge-carried {
+            background: var(--warning-bg);
+            color: var(--warning);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 11px;
+            border: 1px solid #fde68a;
+        }
+
+        .badge-current {
+            background: var(--danger-bg);
+            color: var(--danger);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 11px;
+            border: 1px solid #fca5a5;
+        }
+
+        .receivable-amount {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--danger);
+            text-align: right;
+        }
+
+        /* RAPOR CARDS */
+        .report-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .report-card {
+            background: var(--card-bg);
+            padding: 18px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .report-card h4 {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .report-card div {
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .student-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            font-size: 13px;
+        }
+
+        .student-table th, .student-table td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .student-table th {
+            background: var(--neutral-bg);
+            font-weight: 700;
+            color: var(--text-muted);
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .student-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 16px;
+            backdrop-filter: blur(2px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 420px;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            padding: 14px 18px;
+            background: var(--neutral-bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .modal-body {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-group label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .form-group input, .form-group select {
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-light);
+        }
+
+        .modal-footer {
+            padding: 12px 18px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            background: var(--bg);
+        }
+
+        /* TOAST NOTIFICATION */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--text);
+            color: white;
+            padding: 12px 18px;
+            border-radius: var(--radius-md);
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+            pointer-events: none;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .settings-bar {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 640px) {
+            .header-top { padding: 10px 12px; }
+            .controls-wrapper { width: 100%; justify-content: space-between; }
+            .controls { flex: 1; }
+            .controls select { flex: 1; }
+            .receivable-card { flex-direction: column; align-items: flex-start; }
+            .receivable-card > div:last-child { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="header-top">
+            <div class="brand">
+                <div class="brand-logo">D</div>
+                <div>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span class="brand-title">DersTakip Pro</span>
+                        <span id="saveBadge" class="save-badge">💾 Otomatik Kaydedildi</span>
+                    </div>
+                    <div class="brand-subtitle">Haftalık Program & Devreden Borç Takip Sistemi</div>
+                </div>
+            </div>
+
+            <div class="controls-wrapper">
+                <!-- Global Year, Month & Week Selector -->
+                <div class="controls">
+                    <select id="selYear" onchange="renderApp()"></select>
+                    <select id="selMonth" onchange="renderApp()"></select>
+                    <select id="selWeek" onchange="renderApp()"></select>
+                </div>
+
+                <button class="btn btn-primary" onclick="openAddModal()">+ Yeni Ders</button>
+            </div>
+        </div>
+
+        <nav>
+            <div class="tabs">
+                <button class="tab-btn active" id="tab-btn-program" onclick="switchTab('program')">📅 Haftalık Program</button>
+                <button class="tab-btn" id="tab-btn-odeme" onclick="switchTab('odeme')">💳 Ödeme Takibi</button>
+                <button class="tab-btn" id="tab-btn-alacaklar" onclick="switchTab('alacaklar')">🚨 Aylık & Devreden Alacaklar</button>
+                <button class="tab-btn" id="tab-btn-rapor" onclick="switchTab('rapor')">📊 Gelir & Raporlar</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main>
+        <!-- TAB 1: HAFTALIK DERS PROGRAMI -->
+        <section id="tab-program" class="tab-content active">
+            <div class="info-banner">
+                <div>Dönem: <strong id="lblActivePeriod">Ekim 2026 / 3. Hafta (12-18 Ekim)</strong></div>
+                <div>Haftalık Toplam Ders Ücreti: <strong id="lblWeeklyTotal" style="color:var(--success);">0 TL</strong></div>
+            </div>
+            <div class="days-grid" id="programGrid"></div>
+        </section>
+
+        <!-- TAB 2: ÖĞRENCİ VE ÖDEME TAKİBİ -->
+        <section id="tab-odeme" class="tab-content">
+            <div class="info-banner" style="background:var(--neutral-bg); border-color:var(--border); color:var(--text);">
+                <span>💡 Tıklama Sırası: <strong>Bekliyor (Gri)</strong> ➔ <strong>Ödendi (Yeşil)</strong> ➔ <strong>Ödenmedi (Kırmızı)</strong> ➔ <strong>Sıfırla</strong></span>
+            </div>
+            <div class="days-grid" id="odemeGrid"></div>
+        </section>
+
+        <!-- TAB 3: AYLIK & DEVREDEN ALACAKLAR -->
+        <section id="tab-alacaklar" class="tab-content">
+            <div id="alacaklarList"></div>
+        </section>
+
+        <!-- TAB 4: AYLIK GELİR & RAPORLAR -->
+        <section id="tab-rapor" class="tab-content">
+            <div class="report-grid">
+                <div class="report-card">
+                    <h4>Tahsil Edilen (Ödendi)</h4>
+                    <div id="reportPaid" style="color: var(--success);">0 TL</div>
+                </div>
+                <div class="report-card">
+                    <h4>Bekleyen Alacak (Ödenmedi)</h4>
+                    <div id="reportUnpaid" style="color: var(--danger);">0 TL</div>
+                </div>
+                <div class="report-card">
+                    <h4>Toplam Potansiyel Gelir</h4>
+                    <div id="reportTotal" style="color: var(--primary);">0 TL</div>
+                </div>
+            </div>
+
+            <h3 style="font-size:15px; margin-bottom:12px; color:var(--text);">Öğrenci Bazlı Ödeme Özeti (Seçili Ay)</h3>
+            <div style="overflow-x:auto;">
+                <table class="student-table">
+                    <thead>
+                        <tr>
+                            <th>Öğrenci Adı</th>
+                            <th>Aylık Ders</th>
+                            <th>Ödendi</th>
+                            <th>Bu Ayki Borç</th>
+                            <th>Geçmişten Devreden</th>
+                            <th>Toplam Tutar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentReportBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SETTINGS & DATA MANAGEMENT FOOTER -->
+        <div class="settings-bar">
+            <span>Verileriniz tarayıcınıza (Storage: <code>ozel_ders_v3</code>) anında otomatik kaydedilir.</span>
+            <div style="display:flex; gap:8px;">
+                <button class="btn btn-secondary" onclick="exportData()" title="Tüm verileri yedekleyin">💾 Yedek Al (JSON)</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('importFile').click()" title="Yedek yükleyin">📂 Yükle</button>
+                <input type="file" id="importFile" style="display:none;" accept=".json" onchange="importData(event)">
+                <button class="btn btn-outline-danger" onclick="resetData()">↺ Sıfırla</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- DERS EKLEME MODAL -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>Yeni Ders Ekle</span>
+                <button class="btn-icon" onclick="closeAddModal()">✕</button>
+            </div>
+            <form id="addForm" onsubmit="saveNewLesson(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Öğrenci Adı Soyadı</label>
+                        <input type="text" id="addStudent" placeholder="Örn: Elif Sena Yazgan" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ders Günü</label>
+                        <select id="addDay" required>
+                            <option value="Sali">Salı</option>
+                            <option value="Cumartesi">Cumartesi</option>
+                            <option value="Pazar">Pazar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Saat Aralığı</label>
+                        <input type="text" id="addTime" placeholder="14.00-16.00" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ders Ücreti (TL)</label>
+                        <input type="number" id="addPrice" placeholder="2000" min="0" step="50" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeAddModal()">İptal</button>
+                    <button type="submit" class="btn btn-primary">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // STORAGE KEY - V3 WITH DEBT CARRYOVER
+        const STORAGE_KEY = 'ozel_ders_v3';
+
+        // DEFAULT SCHEDULE AS REQUESTED
+        const DEFAULT_SCHEDULE = [
+            { id: '1', day: 'Sali', time: '14.00-16.00', student: 'Elif Sena Yazgan', price: 2000 },
+            { id: '2', day: 'Cumartesi', time: '13.30-15.30', student: 'Elif Sena Yazgan', price: 2000 },
+            { id: '3', day: 'Cumartesi', time: '15.30-17.30', student: 'Baran Tuzlacılar', price: 2500 },
+            { id: '4', day: 'Cumartesi', time: '17.30-18.30', student: 'Tuğçe Atak', price: 2000 },
+            { id: '5', day: 'Pazar', time: '9.00-10.00', student: 'Sadık Çınar Piri', price: 2000 },
+            { id: '6', day: 'Pazar', time: '10.00-12.00', student: 'Kerem Akkaya', price: 3000 },
+            { id: '7', day: 'Pazar', time: '12.00-14.00', student: 'İpek Lina Dedeoğlu', price: 3000 },
+            { id: '8', day: 'Pazar', time: '14.00-15.00', student: 'Bilgin Aktaş', price: 2000 },
+            { id: '9', day: 'Pazar', time: '15.00-16.00', student: 'Çınar Ünal', price: 2000 },
+            { id: '10', day: 'Pazar', time: '16.00-17.00', student: 'Ela Ekici', price: 2000 },
+            { id: '11', day: 'Pazar', time: '17.00-19.00', student: 'Kayra Öztekin', price: 3000 }
+        ];
+
+        const MONTH_NAMES = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"];
+
+        // APP STATE
+        let appData = {
+            lessons: [...DEFAULT_SCHEDULE],
+            status: {} // Key format: `${year}-${month}-${week}-${lessonId}` -> 'paid' | 'unpaid'
+        };
+
+        // LOAD DATA
+        function loadData() {
+            try {
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    if (parsed && Array.isArray(parsed.lessons)) {
+                        appData = parsed;
+                    }
+                } else {
+                    saveData();
+                }
+            } catch (e) {
+                console.error('Data Load Error:', e);
+            }
+        }
+
+        // SAVE DATA TO LOCALSTORAGE
+        function saveData() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+                flashSaveBadge();
+            } catch (e) {
+                console.error('Data Save Error:', e);
+                showToast('❌ Veri kaydedilemedi! Tarayıcı hafıza alanını kontrol edin.');
+            }
+        }
+
+        function flashSaveBadge() {
+            const badge = document.getElementById('saveBadge');
+            if (badge) {
+                badge.style.opacity = '1';
+                setTimeout(() => { badge.style.opacity = '0.5'; }, 1000);
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 3000);
+        }
+
+        // INITIALIZATION
+        window.onload = function() {
+            loadData();
+            initSelectors();
+            renderApp();
+        };
+
+        function initSelectors() {
+            const selYear = document.getElementById('selYear');
+            const selMonth = document.getElementById('selMonth');
+            const selWeek = document.getElementById('selWeek');
+
+            selYear.innerHTML = '<option value="2026">2026</option><option value="2027">2027</option>';
+            selMonth.innerHTML = MONTH_NAMES.map((m, i) => `<option value="${i}">${m}</option>`).join('');
+            selWeek.innerHTML = [1, 2, 3, 4, 5].map(w => `<option value="${w}">${w}. Hafta</option>`).join('');
+
+            // Başlangıç Tarihi: 15 Ekim 2026 (Ekim / 3. Hafta: 12-18 Ekim)
+            selYear.value = "2026";
+            selMonth.value = "9"; // Ekim (0-indexed: 9)
+            selWeek.value = "3";  // 15 Ekim 3. haftaya denk gelir
+        }
+
+        // CALCULATE DATES
+        function getExactDates(year, month, week) {
+            const startDayNum = 1 + (week - 1) * 7;
+            const getDateStr = (targetDayIdx) => {
+                let d = new Date(year, month, startDayNum);
+                while(d.getDay() !== targetDayIdx) {
+                    d.setDate(d.getDate() + 1);
+                }
+                return `${d.getDate()} ${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}`;
+            };
+
+            return {
+                Sali: getDateStr(2),
+                Cumartesi: getDateStr(6),
+                Pazar: getDateStr(0)
+            };
+        }
+
+        // MAIN RENDER FUNCTION
+        function renderApp() {
+            const year = parseInt(document.getElementById('selYear').value);
+            const month = parseInt(document.getElementById('selMonth').value);
+            const week = parseInt(document.getElementById('selWeek').value);
+
+            document.getElementById('lblActivePeriod').innerText = `${MONTH_NAMES[month]} ${year} / ${week}. Hafta`;
+
+            const dates = getExactDates(year, month, week);
+
+            renderProgram(dates);
+            renderOdeme(year, month, week, dates);
+            renderAlacaklar(year, month);
+            renderRapor(year, month);
+        }
+
+        // 1. RENDER DERS PROGRAMI
+        function renderProgram(dates) {
+            const grid = document.getElementById('programGrid');
+            grid.innerHTML = '';
+
+            let weeklySum = 0;
+            appData.lessons.forEach(l => weeklySum += Number(l.price));
+            document.getElementById('lblWeeklyTotal').innerText = weeklySum.toLocaleString('tr-TR') + ' TL';
+
+            const days = [
+                { key: 'Sali', title: 'Salı', date: dates.Sali },
+                { key: 'Cumartesi', title: 'Cumartesi', date: dates.Cumartesi },
+                { key: 'Pazar', title: 'Pazar', date: dates.Pazar }
+            ];
+
+            days.forEach(d => {
+                const dayLessons = appData.lessons.filter(l => l.day === d.key);
+                let cardsHtml = dayLessons.map(l => `
+                    <div class="lesson-card">
+                        <div class="lesson-header">
+                            <span class="student-name">${escapeHtml(l.student)}</span>
+                            <span class="lesson-time">⏰ ${escapeHtml(l.time)}</span>
+                        </div>
+                        <div class="lesson-footer">
+                            <span class="lesson-price">${Number(l.price).toLocaleString('tr-TR')} TL</span>
+                            <div class="action-btns">
+                                <button class="btn-icon" onclick="moveLesson('${l.id}', -1)" title="Yukarı Taşı">▲</button>
+                                <button class="btn-icon" onclick="moveLesson('${l.id}', 1)" title="Aşağı Taşı">▼</button>
+                                <button class="btn-icon delete" onclick="deleteLesson('${l.id}')" title="Dersi Sil">✕</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                grid.innerHTML += `
+                    <div class="day-column">
+                        <div class="day-header">
+                            <span class="day-title">${d.title}</span>
+                            <span class="day-date">${d.date}</span>
+                        </div>
+                        <div class="day-body">${cardsHtml || '<p style="padding:20px; text-align:center; color:var(--text-muted); font-size:12px;">Ders bulunmuyor.</p>'}</div>
+                    </div>
+                `;
+            });
+        }
+
+        // 2. RENDER ÖDEME TAKİBİ
+        function renderOdeme(year, month, week, dates) {
+            const grid = document.getElementById('odemeGrid');
+            grid.innerHTML = '';
+
+            const days = [
+                { key: 'Sali', title: 'Salı', date: dates.Sali },
+                { key: 'Cumartesi', title: 'Cumartesi', date: dates.Cumartesi },
+                { key: 'Pazar', title: 'Pazar', date: dates.Pazar }
+            ];
+
+            days.forEach(d => {
+                const dayLessons = appData.lessons.filter(l => l.day === d.key);
+                let cardsHtml = dayLessons.map(l => {
+                    const statusKey = `${year}-${month}-${week}-${l.id}`;
+                    const currentStatus = appData.status[statusKey] || 'neutral';
+
+                    let statusClass = 'status-neutral';
+                    let statusText = '⚪ Bekliyor (İşaretlenmedi)';
+                    if (currentStatus === 'paid') { statusClass = 'status-paid'; statusText = '✓ ÖDENDİ (Yeşil)'; }
+                    else if (currentStatus === 'unpaid') { statusClass = 'status-unpaid'; statusText = '✕ ÖDENMEDİ (Kırmızı)'; }
+
+                    return `
+                        <div class="lesson-card">
+                            <div class="lesson-header">
+                                <span class="student-name">${escapeHtml(l.student)}</span>
+                                <span class="lesson-price">${Number(l.price).toLocaleString('tr-TR')} TL</span>
+                            </div>
+                            <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">⏰ ${d.date} | ${escapeHtml(l.time)}</div>
+                            <button class="status-btn ${statusClass}" onclick="cycleStatus('${statusKey}')">
+                                ${statusText}
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+
+                grid.innerHTML += `
+                    <div class="day-column">
+                        <div class="day-header">
+                            <span class="day-title">${d.title}</span>
+                            <span class="day-date">${d.date}</span>
+                        </div>
+                        <div class="day-body">${cardsHtml || '<p style="padding:20px; text-align:center; color:var(--text-muted); font-size:12px;">Ders bulunmuyor.</p>'}</div>
+                    </div>
+                `;
+            });
+        }
+
+        // CYCLE PAYMENT STATUS: Neutral -> Paid -> Unpaid -> Neutral
+        function cycleStatus(key) {
+            const current = appData.status[key] || 'neutral';
+            if (current === 'neutral') appData.status[key] = 'paid';
+            else if (current === 'paid') appData.status[key] = 'unpaid';
+            else delete appData.status[key];
+
+            saveData();
+            renderApp();
+        }
+
+        // 3. RENDER AYLIK & DEVREDEN ALACAKLAR (WITH DEBT CARRYOVER)
+        function renderAlacaklar(selectedYear, selectedMonth) {
+            const container = document.getElementById('alacaklarList');
+            container.innerHTML = '';
+
+            let unpaidByStudent = {};
+
+            // Parse all keys in status to find current vs carried-over debt
+            Object.keys(appData.status).forEach(key => {
+                if (appData.status[key] === 'unpaid') {
+                    const parts = key.split('-');
+                    if (parts.length === 4) {
+                        const kYear = parseInt(parts[0]);
+                        const kMonth = parseInt(parts[1]);
+                        const kWeek = parseInt(parts[2]);
+                        const lessonId = parts[3];
+
+                        const lesson = appData.lessons.find(l => l.id === lessonId);
+                        if (lesson) {
+                            const isPast = (kYear < selectedYear) || (kYear === selectedYear && kMonth < selectedMonth);
+                            const isCurrentMonth = (kYear === selectedYear && kMonth === selectedMonth);
+
+                            if (isPast || isCurrentMonth) {
+                                if (!unpaidByStudent[lesson.student]) {
+                                    unpaidByStudent[lesson.student] = { currentMonthDebt: 0, carriedOverDebt: 0, items: [] };
+                                }
+
+                                const price = Number(lesson.price);
+                                if (isPast) {
+                                    unpaidByStudent[lesson.student].carriedOverDebt += price;
+                                } else {
+                                    unpaidByStudent[lesson.student].currentMonthDebt += price;
+                                }
+
+                                unpaidByStudent[lesson.student].items.push({
+                                    key: key,
+                                    year: kYear,
+                                    month: kMonth,
+                                    week: kWeek,
+                                    price: price,
+                                    isPast: isPast
+                                });
+                            }
+                        }
+                    }
+                }
+            });
+
+            const students = Object.keys(unpaidByStudent);
+            if (students.length === 0) {
+                container.innerHTML = `
+                    <div style="background:white; padding:30px; border-radius:var(--radius-lg); text-align:center; border:1px solid var(--border); color:var(--text-muted);">
+                        <p style="font-weight:700; color:var(--text); font-size:15px;">🎉 Geçmiş veya bu ay için ödenmemiş borç/alacak bulunmuyor.</p>
+                        <p style="font-size:12px; margin-top:4px;">Tüm ders ödemeleri eksiksiz tahsil edildi.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            students.forEach(student => {
+                const info = unpaidByStudent[student];
+                const totalDebt = info.currentMonthDebt + info.carriedOverDebt;
+
+                container.innerHTML += `
+                    <div class="receivable-card">
+                        <div class="receivable-info">
+                            <h3>👤 ${escapeHtml(student)}</h3>
+                            <div class="receivable-breakdown">
+                                ${info.carriedOverDebt > 0 ? `<span class="badge-carried">⏮ Geçmiş Aylardan Devreden Borç: ${info.carriedOverDebt.toLocaleString('tr-TR')} TL</span>` : ''}
+                                ${info.currentMonthDebt > 0 ? `<span class="badge-current">📅 Bu Ayki Toplam Borç: ${info.currentMonthDebt.toLocaleString('tr-TR')} TL</span>` : ''}
+                            </div>
+                        </div>
+                        <div>
+                            <div class="receivable-amount">${totalDebt.toLocaleString('tr-TR')} TL</div>
+                            <button class="btn btn-primary" style="margin-top:8px; font-size:12px;" onclick="collectStudentAllDebt('${encodeURIComponent(student)}')">
+                                Toplu Ödeme Al (Tümünü Temizle)
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // TOPLU ÖDEME AL (HEM GEÇMİŞ HEM BU AYKİ BORÇLARI KAPATIR)
+        function collectStudentAllDebt(studentEncoded) {
+            const student = decodeURIComponent(studentEncoded);
+            let clearedCount = 0;
+            let totalCleared = 0;
+
+            Object.keys(appData.status).forEach(key => {
+                if (appData.status[key] === 'unpaid') {
+                    const parts = key.split('-');
+                    if (parts.length === 4) {
+                        const lessonId = parts[3];
+                        const lesson = appData.lessons.find(l => l.id === lessonId);
+                        if (lesson && lesson.student === student) {
+                            appData.status[key] = 'paid';
+                            clearedCount++;
+                            totalCleared += Number(lesson.price);
+                        }
+                    }
+                }
+            });
+
+            if (clearedCount > 0) {
+                saveData();
+                renderApp();
+                showToast(`✓ ${student} için toplam ${totalCleared.toLocaleString('tr-TR')} TL (geçmiş + mevcut) tahsil edildi!`);
+            } else {
+                showToast('Ödenmemiş borç bulunamadı.');
+            }
+        }
+
+        // 4. RENDER RAPORLAR
+        function renderRapor(selectedYear, selectedMonth) {
+            let paid = 0;
+            let unpaid = 0;
+            let studentStats = {};
+
+            // Render active month stats
+            [1, 2, 3, 4, 5].forEach(w => {
+                appData.lessons.forEach(l => {
+                    if (!studentStats[l.student]) {
+                        studentStats[l.student] = { totalLessons: 0, paid: 0, unpaidCurrent: 0, carriedOver: 0, totalAmount: 0 };
+                    }
+
+                    const key = `${selectedYear}-${selectedMonth}-${w}-${l.id}`;
+                    const status = appData.status[key];
+
+                    studentStats[l.student].totalLessons += 1;
+                    studentStats[l.student].totalAmount += Number(l.price);
+
+                    if (status === 'paid') {
+                        paid += Number(l.price);
+                        studentStats[l.student].paid += Number(l.price);
+                    } else if (status === 'unpaid') {
+                        unpaid += Number(l.price);
+                        studentStats[l.student].unpaidCurrent += Number(l.price);
+                    }
+                });
+            });
+
+            // Calculate carried over debt per student
+            Object.keys(appData.status).forEach(key => {
+                if (appData.status[key] === 'unpaid') {
+                    const parts = key.split('-');
+                    if (parts.length === 4) {
+                        const kYear = parseInt(parts[0]);
+                        const kMonth = parseInt(parts[1]);
+                        const lessonId = parts[3];
+                        const lesson = appData.lessons.find(l => l.id === lessonId);
+
+                        if (lesson && ((kYear < selectedYear) || (kYear === selectedYear && kMonth < selectedMonth))) {
+                            if (!studentStats[lesson.student]) {
+                                studentStats[lesson.student] = { totalLessons: 0, paid: 0, unpaidCurrent: 0, carriedOver: 0, totalAmount: 0 };
+                            }
+                            studentStats[lesson.student].carriedOver += Number(lesson.price);
+                        }
+                    }
+                }
+            });
+
+            document.getElementById('reportPaid').innerText = paid.toLocaleString('tr-TR') + ' TL';
+            document.getElementById('reportUnpaid').innerText = unpaid.toLocaleString('tr-TR') + ' TL';
+            document.getElementById('reportTotal').innerText = (paid + unpaid).toLocaleString('tr-TR') + ' TL';
+
+            // Student Table
+            const tbody = document.getElementById('studentReportBody');
+            tbody.innerHTML = '';
+
+            const students = Object.keys(studentStats);
+            if (students.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Ders kaydı bulunmuyor.</td></tr>';
+                return;
+            }
+
+            students.forEach(st => {
+                const s = studentStats[st];
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${escapeHtml(st)}</strong></td>
+                        <td>${s.totalLessons} ders</td>
+                        <td style="color:var(--success); font-weight:700;">${s.paid.toLocaleString('tr-TR')} TL</td>
+                        <td style="color:var(--danger); font-weight:700;">${s.unpaidCurrent.toLocaleString('tr-TR')} TL</td>
+                        <td style="color:var(--warning); font-weight:700;">${s.carriedOver > 0 ? s.carriedOver.toLocaleString('tr-TR') + ' TL' : '-'}</td>
+                        <td><strong>${(s.paid + s.unpaidCurrent + s.carriedOver).toLocaleString('tr-TR')} TL</strong></td>
+                    </tr>
+                `;
+            });
+        }
+
+        // MOVE LESSON POSITION
+        function moveLesson(id, dir) {
+            const idx = appData.lessons.findIndex(l => l.id === id);
+            if (idx === -1) return;
+            const targetIdx = idx + dir;
+
+            if (targetIdx >= 0 && targetIdx < appData.lessons.length) {
+                const temp = appData.lessons[idx];
+                appData.lessons[idx] = appData.lessons[targetIdx];
+                appData.lessons[targetIdx] = temp;
+                saveData();
+                renderApp();
+            }
+        }
+
+        // DELETE LESSON
+        function deleteLesson(id) {
+            if (confirm('Bu dersi programdan silmek istediğinize emin misiniz?')) {
+                appData.lessons = appData.lessons.filter(l => l.id !== id);
+                saveData();
+                renderApp();
+                showToast('Ders programdan çıkarıldı.');
+            }
+        }
+
+        // MODAL MANAGEMENT
+        function openAddModal() {
+            document.getElementById('addModal').classList.add('active');
+        }
+
+        function closeAddModal() {
+            document.getElementById('addModal').classList.remove('active');
+        }
+
+        function saveNewLesson(e) {
+            e.preventDefault();
+            const newLesson = {
+                id: Date.now().toString(),
+                student: document.getElementById('addStudent').value.trim(),
+                day: document.getElementById('addDay').value,
+                time: document.getElementById('addTime').value.trim(),
+                price: Number(document.getElementById('addPrice').value)
+            };
+
+            appData.lessons.push(newLesson);
+            saveData();
+            closeAddModal();
+            document.getElementById('addForm').reset();
+            renderApp();
+            showToast('✓ Yeni ders eklendi ve kaydedildi!');
+        }
+
+        // TAB SWITCHING
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            document.getElementById(`tab-btn-${tabId}`).classList.add('active');
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+        }
+
+        // EXPORT & IMPORT BACKUP DATA
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appData, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `ozel_ders_v3_yedek_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast('Yedek JSON dosyası indirildi.');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (imported && Array.isArray(imported.lessons)) {
+                        appData = imported;
+                        saveData();
+                        renderApp();
+                        showToast('✓ Veriler başarıyla içe aktarıldı!');
+                    } else {
+                        alert('Geçersiz yedek dosyası formatı.');
+                    }
+                } catch (err) {
+                    alert('Dosya okunurken bir hata oluştu.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // RESET TO DEFAULTS
+        function resetData() {
+            if (confirm('Tüm ders ve ödeme verilerinizi sıfırlamak istediğinize emin misiniz?')) {
+                appData = {
+                    lessons: [...DEFAULT_SCHEDULE],
+                    status: {}
+                };
+                saveData();
+                renderApp();
+                showToast('Veriler sıfırlandı.');
+            }
+        }
+
+        // HELPER TO PREVENT XSS
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
